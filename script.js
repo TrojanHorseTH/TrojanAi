@@ -1,26 +1,36 @@
+const API_URL = "https://your-serverless-function-url.com/chat"; // Replace with your deployed API
+
 async function sendMessage() {
     const inputBox = document.getElementById("user-input");
     const chatBox = document.getElementById("chat-box");
-    const message = inputBox.value;
+    const message = inputBox.value.trim();
     if (!message) return;
 
-    // Show user message
+    // User message
     chatBox.innerHTML += `<p class="user">${message}</p>`;
     inputBox.value = "";
     chatBox.scrollTop = chatBox.scrollHeight;
 
+    // Typing bubble
+    const typingBubble = document.createElement("p");
+    typingBubble.className = "bot typing";
+    typingBubble.textContent = "AI is typing...";
+    chatBox.appendChild(typingBubble);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
     try {
-        const response = await fetch("https://your-serverless-function-url.com/chat", {
+        const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message })
+            body: JSON.stringify({ message }),
         });
 
         const data = await response.json();
-        chatBox.innerHTML += `<p class="bot">${data.reply}</p>`;
+        typingBubble.classList.remove("typing");
+        typingBubble.textContent = data.reply;
         chatBox.scrollTop = chatBox.scrollHeight;
     } catch (err) {
-        chatBox.innerHTML += `<p class="bot">Error: Could not connect to AI</p>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
+        typingBubble.classList.remove("typing");
+        typingBubble.textContent = "Error: Could not connect to AI";
     }
 }
