@@ -1,4 +1,4 @@
-const API_URL = "https://your-serverless-function-url.com/chat"; // Replace with your deployed API
+const API_URL = "https://your-serverless-function-url.com/chat"; // Replace with your deployed serverless API
 
 async function sendMessage() {
     const inputBox = document.getElementById("user-input");
@@ -6,12 +6,10 @@ async function sendMessage() {
     const message = inputBox.value.trim();
     if (!message) return;
 
-    // User message
     chatBox.innerHTML += `<p class="user">${message}</p>`;
     inputBox.value = "";
     chatBox.scrollTop = chatBox.scrollHeight;
 
-    // Typing bubble
     const typingBubble = document.createElement("p");
     typingBubble.className = "bot typing";
     typingBubble.textContent = "AI is typing...";
